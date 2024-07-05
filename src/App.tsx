@@ -5,7 +5,8 @@ export const App: React.FC = () => {
   const [playerName, setPlayerName] = useState('');
   const [gameStarted, setGameStarted] = useState(false);
 
-  const handleStartGame = () => {
+  const handleStartGame = (e: React.FormEvent) => {
+    e.preventDefault();
     if (playerName) {
       setGameStarted(true);
     }
@@ -14,7 +15,7 @@ export const App: React.FC = () => {
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
       {!gameStarted ? (
-        <div className="flex flex-col items-center">
+        <form className="flex flex-col items-center" onSubmit={handleStartGame}>
           <input
             type="text"
             placeholder="Enter your name"
@@ -23,12 +24,12 @@ export const App: React.FC = () => {
             className="mb-4 p-2 border border-gray-300 rounded"
           />
           <button
-            onClick={handleStartGame}
+            type="submit"
             className="bg-blue-500 text-white px-4 py-2 rounded"
           >
             Start Game
           </button>
-        </div>
+        </form>
       ) : (
         <GameBoard playerName={playerName} />
       )}

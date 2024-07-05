@@ -1,6 +1,7 @@
 import { useEffect, useState, FC, useCallback } from 'react';
 import { HighScores } from '../HighScores/HighScores';
 import { v4 as uuidv4 } from 'uuid';
+import { addScore, getScores } from '../../services/api';
 
 interface GameBoardProps {
   playerName: string;
@@ -10,6 +11,11 @@ interface Position {
   x: number;
   y: number;
   id: string;
+}
+
+interface Score {
+  name: string;
+  score: number;
 }
 
 enum FoodType {
@@ -34,6 +40,8 @@ export const GameBoard: FC<GameBoardProps> = ({ playerName }) => {
   const [speed, setSpeed] = useState(200);
   const [paused, setPaused] = useState(false);
   const [gameOver, setGameOver] = useState(false);
+  const [highScores, setHighScores] = useState<Score[]>([]);
+
   const boardSize = 20;
 
   const moveSnake = useCallback(() => {
@@ -139,6 +147,23 @@ export const GameBoard: FC<GameBoardProps> = ({ playerName }) => {
     setPaused(false);
   };
 
+  useEffect(() => {
+    if (gameOver) {
+      const sendScore = async () => {
+        try {
+          await addScore(playerName, score);
+          const scores = await getScores();
+          setHighScores(scores);
+        } catch (error) {
+          console.error('Error adding or fetching scores:', error);
+        }
+      };
+
+      sendScore();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gameOver]);
+
   return (
     <div className="flex flex-col items-center">
       {!gameOver ? (
@@ -196,11 +221,23 @@ export const GameBoard: FC<GameBoardProps> = ({ playerName }) => {
           </div>
         </>
       ) : (
-        <HighScores
-          newScore={score}
-          playerName={playerName}
-          onReset={resetGame}
-        />
+        <>
+          <div className="mb-4">
+            <h2 className="text-xl font-bold">High Scores</h2>
+            <ol className="list-decimal pl-4">
+              {highScores.map((score, index) => (
+                <li key={index} className="mb-1">
+                  {score.name}: {score.score}
+                </li>
+              ))}
+            </ol>
+          </div>
+          <HighScores
+            newScore={score}
+            playerName={playerName}
+            onReset={resetGame}
+          />
+        </>
       )}
     </div>
   );
