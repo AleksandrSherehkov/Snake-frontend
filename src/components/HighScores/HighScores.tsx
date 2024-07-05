@@ -26,14 +26,19 @@ export const HighScores: FC<HighScoresProps> = ({
   }, []);
 
   useEffect(() => {
-    if (newScore > 0) {
+    if (
+      newScore > 0 &&
+      !scores.some(
+        score => score.name === playerName && score.score === newScore
+      )
+    ) {
       const updatedScores = [...scores, { name: playerName, score: newScore }]
         .sort((a, b) => b.score - a.score)
         .slice(0, 10);
       setScores(updatedScores);
       localStorage.setItem('highScores', JSON.stringify(updatedScores));
     }
-  }, [newScore]);
+  }, [newScore, playerName]);
 
   return (
     <div className="flex flex-col items-center">
