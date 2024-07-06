@@ -5,6 +5,7 @@ import { GameOver } from '../GameOver/GameOver';
 import { HighScores } from '../HighScores/HighScores';
 import { Legend } from '../Legend/Legend';
 import { ScoreBoard } from '../ScoreBoard/ScoreBoard';
+import { GameField } from '../GameField/GameField';
 
 interface GameBoardProps {
   playerName: string;
@@ -14,6 +15,10 @@ interface Position {
   x: number;
   y: number;
   id: string;
+}
+
+interface Segment extends Position {
+  isHead: boolean;
 }
 
 interface Score {
@@ -42,6 +47,7 @@ export const GameBoard: FC<GameBoardProps> = ({ playerName }) => {
   });
   const [score, setScore] = useState(0);
   const [speed, setSpeed] = useState(200);
+  const [displaySpeed, setDisplaySpeed] = useState(1);
   const [paused, setPaused] = useState(false);
   const [gameOver, setGameOver] = useState(false);
   const [highScores, setHighScores] = useState<Score[]>([]);
@@ -71,7 +77,8 @@ export const GameBoard: FC<GameBoardProps> = ({ playerName }) => {
         const newScore = score + food.type;
         setScore(newScore);
         if (Math.floor(newScore / 50) > Math.floor(score / 50)) {
-          setSpeed(prev => Math.max(prev - 20, 50));
+          setSpeed(prev => Math.max(prev - 10, 50));
+          setDisplaySpeed(prev => prev + 0.5);
         }
       } else {
         newSnake.pop();
@@ -148,6 +155,7 @@ export const GameBoard: FC<GameBoardProps> = ({ playerName }) => {
     setDirection({ x: 0, y: -1 });
     setScore(0);
     setSpeed(200);
+    setDisplaySpeed(1);
     setGameOver(false);
     setPaused(false);
   };
@@ -168,6 +176,11 @@ export const GameBoard: FC<GameBoardProps> = ({ playerName }) => {
     }
   }, [gameOver, playerName, score]);
 
+  const snakeSegments: Segment[] = snake.map((segment, index) => ({
+    ...segment,
+    isHead: index === 0,
+  }));
+
   return (
     <div className="flex flex-col items-center">
       {!gameOver ? (
@@ -175,56 +188,24 @@ export const GameBoard: FC<GameBoardProps> = ({ playerName }) => {
           <h1 className="text-2xl font-bold mb-4 text-blue-500">
             Player: <span className="text-red-500">{playerName}</span>
           </h1>
-          <div className="bg-gray-800 w-96 h-96 relative border-4 border-gray-700 shadow-lg">
-            {snake.map(segment => (
-              <div
-                key={segment.id}
-                className={`absolute ${
-                  segment === snake[0]
-                    ? 'bg-green-700 animate-pulse'
-                    : 'bg-green-500'
-                }`}
-                style={{
-                  width: '5%',
-                  height: '5%',
-                  left: `${(segment.x / boardSize) * 100}%`,
-                  top: `${(segment.y / boardSize) * 100}%`,
-                }}
-              ></div>
-            ))}
-            <div
-              className={`absolute ${
-                food.type === FoodType.SMALL
-                  ? 'bg-red-500 animate-bounce'
-                  : food.type === FoodType.MEDIUM
-                  ? 'bg-yellow-500 animate-bounce'
-                  : 'bg-blue-500 animate-bounce'
-              }`}
-              style={{
-                width: '5%',
-                height: '5%',
-                left: `${(food.position.x / boardSize) * 100}%`,
-                top: `${(food.position.y / boardSize) * 100}%`,
-              }}
-            ></div>
-            {paused && (
-              <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 text-white text-4xl">
-                Pause
-              </div>
-            )}
-          </div>
-          <ScoreBoard score={score} speed={speed} />
+          <GameField
+            snakeSegments={snakeSegments}
+            food={food}
+            boardSize={boardSize}
+            paused={paused}
+          />
+          <ScoreBoard score={score} speed={displaySpeed} />
           <Legend />
         </>
       ) : (
-        <div className="flex flex-col items-center gap-2">
+        <>
           <HighScores highScores={highScores} />
           <GameOver
             newScore={score}
             playerName={playerName}
             onReset={resetGame}
           />
-        </div>
+        </>
       )}
     </div>
   );
