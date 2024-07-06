@@ -1,7 +1,10 @@
 import { useEffect, useState, FC, useCallback } from 'react';
-import { HighScores } from '../HighScores/HighScores';
 import { v4 as uuidv4 } from 'uuid';
-import { addScore, getScores } from '../../services/api';
+import { addOrUpdateScore, getScores } from '../../services/api';
+import { GameOver } from '../GameOver/GameOver';
+import { HighScores } from '../HighScores/HighScores';
+import { Legend } from '../Legend/Legend';
+import { ScoreBoard } from '../ScoreBoard/ScoreBoard';
 
 interface GameBoardProps {
   playerName: string;
@@ -16,6 +19,7 @@ interface Position {
 interface Score {
   name: string;
   score: number;
+  id: string;
 }
 
 enum FoodType {
@@ -64,9 +68,10 @@ export const GameBoard: FC<GameBoardProps> = ({ playerName }) => {
             Math.floor(Math.random() * 3)
           ],
         });
-        setScore(score + food.type);
-        if ((score + food.type) % 50 === 0) {
-          setSpeed(prev => prev - 20);
+        const newScore = score + food.type;
+        setScore(newScore);
+        if (Math.floor(newScore / 50) > Math.floor(score / 50)) {
+          setSpeed(prev => Math.max(prev - 20, 50));
         }
       } else {
         newSnake.pop();
@@ -151,7 +156,7 @@ export const GameBoard: FC<GameBoardProps> = ({ playerName }) => {
     if (gameOver) {
       const sendScore = async () => {
         try {
-          await addScore(playerName, score);
+          await addOrUpdateScore(playerName, score);
           const scores = await getScores();
           setHighScores(scores);
         } catch (error) {
@@ -161,20 +166,23 @@ export const GameBoard: FC<GameBoardProps> = ({ playerName }) => {
 
       sendScore();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [gameOver]);
+  }, [gameOver, playerName, score]);
 
   return (
     <div className="flex flex-col items-center">
       {!gameOver ? (
         <>
-          <h1 className="text-2xl font-bold mb-4">Player: {playerName}</h1>
-          <div className="bg-gray-800 w-96 h-96 relative">
+          <h1 className="text-2xl font-bold mb-4 text-blue-500">
+            Player: <span className="text-red-500">{playerName}</span>
+          </h1>
+          <div className="bg-gray-800 w-96 h-96 relative border-4 border-gray-700 shadow-lg">
             {snake.map(segment => (
               <div
                 key={segment.id}
                 className={`absolute ${
-                  segment === snake[0] ? 'bg-green-700' : 'bg-green-500'
+                  segment === snake[0]
+                    ? 'bg-green-700 animate-pulse'
+                    : 'bg-green-500'
                 }`}
                 style={{
                   width: '5%',
@@ -187,10 +195,10 @@ export const GameBoard: FC<GameBoardProps> = ({ playerName }) => {
             <div
               className={`absolute ${
                 food.type === FoodType.SMALL
-                  ? 'bg-red-500'
+                  ? 'bg-red-500 animate-bounce'
                   : food.type === FoodType.MEDIUM
-                  ? 'bg-yellow-500'
-                  : 'bg-blue-500'
+                  ? 'bg-yellow-500 animate-bounce'
+                  : 'bg-blue-500 animate-bounce'
               }`}
               style={{
                 width: '5%',
@@ -205,39 +213,18 @@ export const GameBoard: FC<GameBoardProps> = ({ playerName }) => {
               </div>
             )}
           </div>
-          <div className="mt-4">
-            <p>Score: {score}</p>
-          </div>
-          <div className="mt-4 text-center">
-            <div className="flex items-center justify-center">
-              <div className="w-5 h-5 bg-red-500 mr-2"></div>
-              <p className="mr-4">1 point</p>
-              <div className="w-5 h-5 bg-yellow-500 mr-2"></div>
-              <p className="mr-4">5 points</p>
-              <div className="w-5 h-5 bg-blue-500 mr-2"></div>
-              <p>10 points</p>
-            </div>
-            <p className="mt-2">Press Space to pause/unpause the game</p>
-          </div>
+          <ScoreBoard score={score} speed={speed} />
+          <Legend />
         </>
       ) : (
-        <>
-          <div className="mb-4">
-            <h2 className="text-xl font-bold">High Scores</h2>
-            <ol className="list-decimal pl-4">
-              {highScores.map((score, index) => (
-                <li key={index} className="mb-1">
-                  {score.name}: {score.score}
-                </li>
-              ))}
-            </ol>
-          </div>
-          <HighScores
+        <div className="flex flex-col items-center gap-2">
+          <HighScores highScores={highScores} />
+          <GameOver
             newScore={score}
             playerName={playerName}
             onReset={resetGame}
           />
-        </>
+        </div>
       )}
     </div>
   );

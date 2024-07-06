@@ -14,10 +14,19 @@ export const getScores = async () => {
   }
 };
 
-export const addScore = async (name: string, score: number) => {
+export const addOrUpdateScore = async (name: string, score: number) => {
   try {
     const response = await api.post('/scores', { name, score });
     return response.data;
+  } catch (error) {
+    handleError(error);
+  }
+};
+
+export const checkUniqueName = async (name: string) => {
+  try {
+    const response = await api.post('/check-unique-name', { name });
+    return response.data.isUnique;
   } catch (error) {
     handleError(error);
   }
