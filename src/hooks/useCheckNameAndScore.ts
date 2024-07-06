@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+
 import { checkUniqueName, addOrUpdateScore } from '../services/api';
 
 export const useCheckNameAndScore = () => {

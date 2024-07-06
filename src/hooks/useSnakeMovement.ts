@@ -1,17 +1,7 @@
 import { useCallback } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
-interface Position {
-  x: number;
-  y: number;
-  id: string;
-}
-
-enum FoodType {
-  SMALL = 1,
-  MEDIUM = 5,
-  LARGE = 10,
-}
+import { FoodType, Position } from '../types/definitions';
 
 interface UseSnakeMovementProps {
   setSnake: React.Dispatch<React.SetStateAction<Position[]>>;

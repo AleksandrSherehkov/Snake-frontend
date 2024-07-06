@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+
+import { useCheckNameAndScore } from './hooks/useCheckNameAndScore';
+
 import { GameBoard } from './components/GameBoard/GameBoard';
 import { StartForm } from './components/StartForm/StartForm';
-import { useCheckNameAndScore } from './hooks/useCheckNameAndScore';
 
 export const App: React.FC = () => {
   const [playerName, setPlayerName] = useState('');

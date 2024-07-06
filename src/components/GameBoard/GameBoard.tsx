@@ -1,17 +1,19 @@
-// GameBoard.tsx
-
 import { useEffect, useState, FC } from 'react';
 import { v4 as uuidv4 } from 'uuid';
+
 import { addOrUpdateScore, getScores } from '../../services/api';
+
+import { useKeyPress } from '../../hooks/useKeyPress';
+import { useSnakeMovement } from '../../hooks/useSnakeMovement';
+import { useCheckCollision } from '../../hooks/useCheckCollision';
+import { useGameTimer } from '../../hooks/useGameTimer';
+
 import { GameOver } from '../GameOver/GameOver';
 import { HighScores } from '../HighScores/HighScores';
 import { Legend } from '../Legend/Legend';
 import { ScoreBoard } from '../ScoreBoard/ScoreBoard';
 import { GameField } from '../GameField/GameField';
-import { useKeyPress } from '../../hooks/useKeyPress';
-import { useSnakeMovement } from '../../hooks/useSnakeMovement';
-import { useCheckCollision } from '../../hooks/useCheckCollision';
-import { useGameTimer } from '../../hooks/useGameTimer';
+
 import { FoodType, Position, Score, Segment } from '../../types/definitions';
 
 interface GameBoardProps {

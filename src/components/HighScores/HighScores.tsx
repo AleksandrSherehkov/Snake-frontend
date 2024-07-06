@@ -1,10 +1,6 @@
 import { FC } from 'react';
 
-interface Score {
-  name: string;
-  score: number;
-  id: string;
-}
+import { Score } from '../../types/definitions';
 
 interface HighScoresProps {
   highScores: Score[];

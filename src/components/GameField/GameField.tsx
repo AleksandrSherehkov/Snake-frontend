@@ -1,17 +1,10 @@
 import { FC } from 'react';
+
 import { Snake } from '../Snake/Snake';
 import { Food } from '../Food/Food';
 import { PauseOverlay } from '../PauseOverlay/PauseOverlay';
 
-interface Position {
-  x: number;
-  y: number;
-  id: string;
-}
-
-interface Segment extends Position {
-  isHead: boolean;
-}
+import { Position, Segment } from '../../types/definitions';
 
 interface GameFieldProps {
   snakeSegments: Segment[];

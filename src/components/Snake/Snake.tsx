@@ -1,11 +1,6 @@
 import { FC } from 'react';
 
-interface Segment {
-  x: number;
-  y: number;
-  id: string;
-  isHead: boolean;
-}
+import { Segment } from '../../types/definitions';
 
 interface SnakeProps {
   segments: Segment[];

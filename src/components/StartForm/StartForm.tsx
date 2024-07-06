@@ -1,17 +1,14 @@
 import { FC, useState } from 'react';
-import { PlayIcon } from '@heroicons/react/20/solid';
 import { z } from 'zod';
+import { PlayIcon } from '@heroicons/react/20/solid';
+
+import { nameSchema } from './validations';
 
 interface StartFormProps {
   onStartGame: (playerName: string) => Promise<void>;
   error: string;
   setError: (error: string) => void;
 }
-
-const nameSchema = z
-  .string()
-  .min(1, 'Name cannot be empty')
-  .max(30, 'Name cannot exceed 30 characters');
 
 export const StartForm: FC<StartFormProps> = ({
   onStartGame,

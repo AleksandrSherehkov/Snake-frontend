@@ -1,10 +1,6 @@
 import { useCallback } from 'react';
 
-interface Position {
-  x: number;
-  y: number;
-  id: string;
-}
+import { Position } from '../types/definitions';
 
 interface UseCheckCollisionProps {
   snake: Position[];

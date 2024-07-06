@@ -1,9 +1,9 @@
-import { useEffect, useRef } from 'react';
+import { SetStateAction, useEffect, useRef } from 'react';
 
 interface UseGameTimerProps {
   moveSnake: () => void;
   checkCollision: () => boolean;
-  setGameOver: React.Dispatch<React.SetStateAction<boolean>>;
+  setGameOver: React.Dispatch<SetStateAction<boolean>>;
   paused: boolean;
   gameOver: boolean;
   speed: number;
