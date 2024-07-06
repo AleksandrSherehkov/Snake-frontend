@@ -1,4 +1,4 @@
-import React, { useEffect, useState, FC, useCallback, useMemo } from 'react';
+import { useEffect, useState, FC, useCallback, useMemo } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 import { addOrUpdateScore, getScores } from '../../services/api';

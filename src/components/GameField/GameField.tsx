@@ -1,4 +1,4 @@
-import React, { FC, memo } from 'react';
+import { FC, memo } from 'react';
 
 import { Snake } from '../Snake/Snake';
 import { Food } from '../Food/Food';
