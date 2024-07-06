@@ -1,4 +1,4 @@
-import { useEffect, useState, FC } from 'react';
+import React, { useEffect, useState, FC, useCallback, useMemo } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 import { addOrUpdateScore, getScores } from '../../services/api';
@@ -71,7 +71,7 @@ export const GameBoard: FC<GameBoardProps> = ({ playerName }) => {
     };
   }, [handleKeyPress]);
 
-  const resetGame = () => {
+  const resetGame = useCallback(() => {
     setSnake([{ x: 10, y: 10, id: uuidv4() }]);
     setDirection({ x: 0, y: -1 });
     setScore(0);
@@ -79,7 +79,7 @@ export const GameBoard: FC<GameBoardProps> = ({ playerName }) => {
     setDisplaySpeed(1);
     setGameOver(false);
     setPaused(false);
-  };
+  }, []);
 
   useEffect(() => {
     if (gameOver) {
@@ -97,10 +97,14 @@ export const GameBoard: FC<GameBoardProps> = ({ playerName }) => {
     }
   }, [gameOver, playerName, score]);
 
-  const snakeSegments: Segment[] = snake.map((segment, index) => ({
-    ...segment,
-    isHead: index === 0,
-  }));
+  const snakeSegments: Segment[] = useMemo(
+    () =>
+      snake.map((segment, index) => ({
+        ...segment,
+        isHead: index === 0,
+      })),
+    [snake]
+  );
 
   return (
     <div className="flex flex-col items-center">

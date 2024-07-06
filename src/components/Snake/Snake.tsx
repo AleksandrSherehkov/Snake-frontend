@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, memo } from 'react';
 
 import { Segment } from '../../types/definitions';
 
@@ -7,7 +7,7 @@ interface SnakeProps {
   boardSize: number;
 }
 
-export const Snake: FC<SnakeProps> = ({ segments, boardSize }) => {
+export const Snake: FC<SnakeProps> = memo(({ segments, boardSize }) => {
   return (
     <>
       {segments.map(segment => (
@@ -26,4 +26,4 @@ export const Snake: FC<SnakeProps> = ({ segments, boardSize }) => {
       ))}
     </>
   );
-};
+});

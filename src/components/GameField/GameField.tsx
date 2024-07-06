@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import React, { FC, memo } from 'react';
 
 import { Snake } from '../Snake/Snake';
 import { Food } from '../Food/Food';
@@ -13,17 +13,14 @@ interface GameFieldProps {
   paused: boolean;
 }
 
-export const GameField: FC<GameFieldProps> = ({
-  snakeSegments,
-  food,
-  boardSize,
-  paused,
-}) => {
-  return (
-    <div className="bg-gray-800 w-96 h-96 relative border-4 border-gray-700 shadow-lg">
-      <Snake segments={snakeSegments} boardSize={boardSize} />
-      <Food position={food.position} type={food.type} boardSize={boardSize} />
-      {paused && <PauseOverlay />}
-    </div>
-  );
-};
+export const GameField: FC<GameFieldProps> = memo(
+  ({ snakeSegments, food, boardSize, paused }) => {
+    return (
+      <div className="bg-gray-800 w-96 h-96 relative border-4 border-gray-700 shadow-lg">
+        <Snake segments={snakeSegments} boardSize={boardSize} />
+        <Food position={food.position} type={food.type} boardSize={boardSize} />
+        {paused && <PauseOverlay />}
+      </div>
+    );
+  }
+);

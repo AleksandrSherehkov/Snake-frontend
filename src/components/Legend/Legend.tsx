@@ -1,6 +1,6 @@
-import { FC } from 'react';
+import { FC, memo } from 'react';
 
-export const Legend: FC = () => {
+export const Legend: FC = memo(() => {
   return (
     <>
       <div className="flex items-center justify-center gap-2 my-3">
@@ -16,4 +16,4 @@ export const Legend: FC = () => {
       </p>
     </>
   );
-};
+});

@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, memo } from 'react';
 
 interface FoodProps {
   position: {
@@ -10,7 +10,7 @@ interface FoodProps {
   boardSize: number;
 }
 
-export const Food: FC<FoodProps> = ({ position, type, boardSize }) => {
+export const Food: FC<FoodProps> = memo(({ position, type, boardSize }) => {
   const foodColor =
     type === 1 ? 'bg-red-500' : type === 5 ? 'bg-yellow-500' : 'bg-blue-500';
 
@@ -25,4 +25,4 @@ export const Food: FC<FoodProps> = ({ position, type, boardSize }) => {
       }}
     ></div>
   );
-};
+});

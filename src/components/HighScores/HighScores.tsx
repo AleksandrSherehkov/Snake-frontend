@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, memo } from 'react';
 
 import { Score } from '../../types/definitions';
 
@@ -6,7 +6,7 @@ interface HighScoresProps {
   highScores: Score[];
 }
 
-export const HighScores: FC<HighScoresProps> = ({ highScores }) => {
+export const HighScores: FC<HighScoresProps> = memo(({ highScores }) => {
   return (
     <div className="mb-4">
       <h2 className="text-xl font-bold">High Scores</h2>
@@ -20,4 +20,4 @@ export const HighScores: FC<HighScoresProps> = ({ highScores }) => {
       </ol>
     </div>
   );
-};
+});
