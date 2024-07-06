@@ -1,4 +1,4 @@
-import { useEffect, useState, FC, useCallback } from 'react';
+import { useEffect, useState, FC } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { addOrUpdateScore, getScores } from '../../services/api';
 import { GameOver } from '../GameOver/GameOver';
@@ -6,6 +6,9 @@ import { HighScores } from '../HighScores/HighScores';
 import { Legend } from '../Legend/Legend';
 import { ScoreBoard } from '../ScoreBoard/ScoreBoard';
 import { GameField } from '../GameField/GameField';
+import { useKeyPress } from '../../hooks/useKeyPress';
+import { useSnakeMovement } from '../../hooks/useSnakeMovement';
+import { useCheckCollision } from '../../hooks/useCheckCollision';
 
 interface GameBoardProps {
   playerName: string;
@@ -51,84 +54,21 @@ export const GameBoard: FC<GameBoardProps> = ({ playerName }) => {
   const [paused, setPaused] = useState(false);
   const [gameOver, setGameOver] = useState(false);
   const [highScores, setHighScores] = useState<Score[]>([]);
+  const handleKeyPress = useKeyPress(setPaused, setDirection, paused);
+  const moveSnake = useSnakeMovement({
+    setSnake,
+    direction,
+    food,
+    setFood,
+    score,
+    setScore,
+    boardSize: 20,
+    setSpeed,
+    setDisplaySpeed,
+  });
+  const checkCollision = useCheckCollision({ snake, boardSize: 20 });
 
   const boardSize = 20;
-
-  const moveSnake = useCallback(() => {
-    setSnake(prev => {
-      const newSnake = [...prev];
-      const head = { ...newSnake[0] };
-      head.x += direction.x;
-      head.y += direction.y;
-      head.id = uuidv4();
-      newSnake.unshift(head);
-
-      if (head.x === food.position.x && head.y === food.position.y) {
-        setFood({
-          position: {
-            x: Math.floor(Math.random() * boardSize),
-            y: Math.floor(Math.random() * boardSize),
-            id: uuidv4(),
-          },
-          type: [FoodType.SMALL, FoodType.MEDIUM, FoodType.LARGE][
-            Math.floor(Math.random() * 3)
-          ],
-        });
-        const newScore = score + food.type;
-        setScore(newScore);
-        if (Math.floor(newScore / 50) > Math.floor(score / 50)) {
-          setSpeed(prev => Math.max(prev - 10, 50));
-          setDisplaySpeed(prev => prev + 0.5);
-        }
-      } else {
-        newSnake.pop();
-      }
-      return newSnake;
-    });
-  }, [direction, food, score, boardSize]);
-
-  const handleKeyPress = useCallback(
-    (e: KeyboardEvent) => {
-      if (e.key === ' ') {
-        setPaused(prev => !prev);
-      }
-      if (!paused) {
-        switch (e.key) {
-          case 'ArrowUp':
-            setDirection({ x: 0, y: -1 });
-            break;
-          case 'ArrowDown':
-            setDirection({ x: 0, y: 1 });
-            break;
-          case 'ArrowLeft':
-            setDirection({ x: -1, y: 0 });
-            break;
-          case 'ArrowRight':
-            setDirection({ x: 1, y: 0 });
-            break;
-        }
-      }
-    },
-    [paused]
-  );
-
-  const checkCollision = useCallback(() => {
-    const head = snake[0];
-    if (
-      head.x < 0 ||
-      head.x >= boardSize ||
-      head.y < 0 ||
-      head.y >= boardSize
-    ) {
-      return true;
-    }
-    for (let i = 1; i < snake.length; i++) {
-      if (snake[i].x === head.x && snake[i].y === head.y) {
-        return true;
-      }
-    }
-    return false;
-  }, [snake, boardSize]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => handleKeyPress(e);
