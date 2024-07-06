@@ -1,3 +1,5 @@
+// GameBoard.tsx
+
 import { useEffect, useState, FC } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { addOrUpdateScore, getScores } from '../../services/api';
@@ -9,31 +11,11 @@ import { GameField } from '../GameField/GameField';
 import { useKeyPress } from '../../hooks/useKeyPress';
 import { useSnakeMovement } from '../../hooks/useSnakeMovement';
 import { useCheckCollision } from '../../hooks/useCheckCollision';
+import { useGameTimer } from '../../hooks/useGameTimer';
+import { FoodType, Position, Score, Segment } from '../../types/definitions';
 
 interface GameBoardProps {
   playerName: string;
-}
-
-interface Position {
-  x: number;
-  y: number;
-  id: string;
-}
-
-interface Segment extends Position {
-  isHead: boolean;
-}
-
-interface Score {
-  name: string;
-  score: number;
-  id: string;
-}
-
-enum FoodType {
-  SMALL = 1,
-  MEDIUM = 5,
-  LARGE = 10,
 }
 
 export const GameBoard: FC<GameBoardProps> = ({ playerName }) => {
@@ -70,6 +52,15 @@ export const GameBoard: FC<GameBoardProps> = ({ playerName }) => {
 
   const boardSize = 20;
 
+  useGameTimer({
+    moveSnake,
+    checkCollision,
+    setGameOver,
+    paused,
+    gameOver,
+    speed,
+  });
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => handleKeyPress(e);
     document.addEventListener('keydown', handleKeyDown);
@@ -77,18 +68,6 @@ export const GameBoard: FC<GameBoardProps> = ({ playerName }) => {
       document.removeEventListener('keydown', handleKeyDown);
     };
   }, [handleKeyPress]);
-
-  useEffect(() => {
-    if (!paused && !gameOver) {
-      const interval = setInterval(() => {
-        moveSnake();
-        if (checkCollision()) {
-          setGameOver(true);
-        }
-      }, speed);
-      return () => clearInterval(interval);
-    }
-  }, [moveSnake, checkCollision, gameOver, speed, paused]);
 
   const resetGame = () => {
     setSnake([{ x: 10, y: 10, id: uuidv4() }]);
