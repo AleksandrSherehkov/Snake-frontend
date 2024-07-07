@@ -2,7 +2,8 @@ import axios from 'axios';
 import { handleError } from './errorHandler';
 
 const api = axios.create({
-  baseURL: 'http://localhost:3000/api',
+  // baseURL: 'http://localhost:3000/api',
+  baseURL: 'https://snake-backend-jd8e.onrender.com/api',
 });
 
 export const getScores = async () => {
