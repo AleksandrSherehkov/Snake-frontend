@@ -2,6 +2,8 @@ import { FC, useState } from 'react';
 import { z } from 'zod';
 import { PlayIcon } from '@heroicons/react/20/solid';
 
+import { Loader } from '../Loader/Loader';
+
 import { nameSchema } from './validations';
 
 interface StartFormProps {
@@ -16,16 +18,20 @@ export const StartForm: FC<StartFormProps> = ({
   setError,
 }) => {
   const [playerName, setPlayerName] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleStartGame = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       nameSchema.parse(playerName);
+      setLoading(true);
       await onStartGame(playerName);
     } catch (e) {
       if (e instanceof z.ZodError) {
         setError(e.errors[0].message);
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -52,8 +58,14 @@ export const StartForm: FC<StartFormProps> = ({
         type="submit"
         className="bg-blue-500 text-white px-4 py-2 rounded shadow hover:bg-blue-600 transition duration-300 w-full flex items-center justify-center"
       >
-        <PlayIcon className="h-5 w-5 mr-2" />
-        Start Game
+        {loading ? (
+          <Loader />
+        ) : (
+          <>
+            <PlayIcon className="size-5 mr-2" />
+            Start Game
+          </>
+        )}
       </button>
     </form>
   );

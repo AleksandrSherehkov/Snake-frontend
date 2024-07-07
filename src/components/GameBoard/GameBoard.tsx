@@ -75,6 +75,7 @@ export const GameBoard: FC<GameBoardProps> = ({ playerName }) => {
     setSnake([{ x: 10, y: 10, id: uuidv4() }]);
     setDirection({ x: 0, y: -1 });
     setScore(0);
+    setHighScores([]);
     setSpeed(200);
     setDisplaySpeed(1);
     setGameOver(false);
