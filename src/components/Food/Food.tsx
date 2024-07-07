@@ -23,6 +23,7 @@ export const Food: FC<FoodProps> = memo(({ position, type, boardSize }) => {
         left: `${(position.x / boardSize) * 100}%`,
         top: `${(position.y / boardSize) * 100}%`,
       }}
+      aria-label={`Food type ${type}`}
     ></div>
   );
 });

@@ -36,7 +36,11 @@ export const StartForm: FC<StartFormProps> = ({
   };
 
   return (
-    <form className="flex flex-col items-center" onSubmit={handleStartGame}>
+    <form
+      className="flex flex-col items-center"
+      onSubmit={handleStartGame}
+      aria-labelledby="start-form-title"
+    >
       <h1 className="text-3xl font-bold mb-4 text-center">
         Welcome to the Snake Game!
       </h1>
@@ -52,17 +56,23 @@ export const StartForm: FC<StartFormProps> = ({
           setError('');
         }}
         className="mb-4 p-2 border border-gray-300 rounded shadow-inner w-full"
+        aria-label="Enter your name"
       />
-      {error && <p className="text-red-500 mb-4">{error}</p>}
+      {error && (
+        <p className="text-red-500 mb-4" role="alert">
+          {error}
+        </p>
+      )}
       <button
         type="submit"
         className="bg-blue-500 text-white px-4 py-2 rounded shadow hover:bg-blue-600 transition duration-300 w-full flex items-center justify-center"
+        aria-label="Start Game"
       >
         {loading ? (
           <Loader />
         ) : (
           <>
-            <PlayIcon className="size-5 mr-2" />
+            <PlayIcon className="size-5 mr-2" aria-hidden="true" />
             Start Game
           </>
         )}

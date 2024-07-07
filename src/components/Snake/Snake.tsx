@@ -22,6 +22,7 @@ export const Snake: FC<SnakeProps> = memo(({ segments, boardSize }) => {
             left: `${(segment.x / boardSize) * 100}%`,
             top: `${(segment.y / boardSize) * 100}%`,
           }}
+          role={segment.isHead ? 'head' : 'segment'}
         ></div>
       ))}
     </>

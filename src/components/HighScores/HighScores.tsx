@@ -8,7 +8,7 @@ interface HighScoresProps {
 
 export const HighScores: FC<HighScoresProps> = memo(({ highScores }) => {
   return (
-    <div className="mb-4">
+    <div className="mb-4" aria-live="polite">
       <h2 className="text-xl font-bold mb-4 text-center">High Scores</h2>
       {highScores.length === 0 ? (
         <Loader />

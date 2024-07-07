@@ -13,7 +13,7 @@ export const GameOver: FC<GameOverProps> = ({
   onReset,
 }) => {
   return (
-    <div className="flex flex-col items-center gap-3">
+    <div className="flex flex-col items-center gap-3" role="alert">
       <h2 className="text-4xl font-bold  text-red-600 animate-bounce">
         Game Over
       </h2>
@@ -26,8 +26,9 @@ export const GameOver: FC<GameOverProps> = ({
       <button
         onClick={onReset}
         className="bg-blue-500 text-white px-6 py-3 rounded-full shadow-md hover:bg-blue-600 transition duration-300 transform hover:scale-105 flex items-center justify-center"
+        aria-label="Play Again"
       >
-        <PlayIcon className="h-6 w-6 mr-2" />
+        <PlayIcon className="h-6 w-6 mr-2" aria-hidden="true" />
         Play Again
       </button>
     </div>

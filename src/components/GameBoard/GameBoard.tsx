@@ -108,7 +108,7 @@ export const GameBoard: FC<GameBoardProps> = ({ playerName }) => {
   );
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center" aria-live="polite">
       {!gameOver ? (
         <>
           <h1 className="text-2xl font-bold mb-4 text-blue-500">
