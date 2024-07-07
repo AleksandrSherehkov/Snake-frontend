@@ -10,7 +10,7 @@ export const useScore = () => {
     setScore(newScore);
     if (Math.floor(newScore / 50) > Math.floor(score / 50)) {
       setSpeed(prev => Math.max(prev - 10, 50));
-      setDisplaySpeed(prev => prev + 0.5);
+      setDisplaySpeed(prev => prev + 1);
     }
   };
 
