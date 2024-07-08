@@ -3,7 +3,6 @@ import { z } from 'zod';
 import { PlayIcon } from '@heroicons/react/20/solid';
 
 import { Loader } from '../Loader/Loader';
-
 import { nameSchema } from './validations';
 
 interface StartFormProps {
@@ -37,14 +36,14 @@ export const StartForm: FC<StartFormProps> = ({
 
   return (
     <form
-      className="flex flex-col items-center"
+      className="flex flex-col items-center bg-white p-8 rounded-lg shadow-lg transition-transform transform hover:scale-105"
       onSubmit={handleStartGame}
       aria-labelledby="start-form-title"
     >
-      <h1 className="text-3xl font-bold mb-4 text-center">
+      <h1 className="text-4xl font-extrabold mb-6 text-center text-gradient bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 bg-clip-text text-transparent">
         Welcome to the Snake Game!
       </h1>
-      <p className="text-gray-600 mb-6 text-center">
+      <p className="text-gray-600 mb-6 text-center text-lg leading-relaxed animate-pulse">
         Enter your name to start playing. Use the arrow keys to move the snake.
       </p>
       <input
@@ -55,7 +54,7 @@ export const StartForm: FC<StartFormProps> = ({
           setPlayerName(e.target.value);
           setError('');
         }}
-        className="mb-4 p-2 border border-gray-300 rounded shadow-inner w-full"
+        className="mb-4 p-3 border border-gray-300 rounded-lg shadow-inner w-full focus:ring-2 focus:ring-blue-500 focus:outline-none focus:border-transparent transition-all duration-300"
         aria-label="Enter your name"
       />
       {error && (
@@ -65,7 +64,7 @@ export const StartForm: FC<StartFormProps> = ({
       )}
       <button
         type="submit"
-        className="bg-blue-500 text-white px-4 py-2 rounded shadow hover:bg-blue-600 transition duration-300 w-full flex items-center justify-center"
+        className="bg-blue-500 text-white px-6 py-3 rounded shadow hover:bg-blue-600 transition duration-300 w-full flex items-center justify-center"
         aria-label="Start Game"
       >
         {loading ? (
