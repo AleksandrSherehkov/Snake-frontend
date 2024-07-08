@@ -111,8 +111,13 @@ export const GameBoard: FC<GameBoardProps> = ({ playerName }) => {
     <div className="flex flex-col items-center" aria-live="polite">
       {!gameOver ? (
         <>
-          <h1 className="text-2xl font-bold mb-4 text-blue-500">
-            Player: <span className="text-red-500">{playerName}</span>
+          <h1 className="text-2xl font-bold mb-4 text-blue-500 flex items-center">
+            <span className="animate-bounce mr-2">🐍</span>
+            Player:{' '}
+            <span className="text-red-500 text-gradient bg-gradient-to-r from-green-400 via-blue-500 to-purple-500 bg-clip-text text-transparent animate-text">
+              {playerName}
+            </span>
+            <span className="animate-bounce ml-2">🐍</span>
           </h1>
           <GameField
             snakeSegments={snakeSegments}
